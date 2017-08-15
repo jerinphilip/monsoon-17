@@ -2,8 +2,8 @@ import sys, re, csv
 import parser
 from dtype import Table
 from pprint import pprint
-from ast import AST
-from sqlparser import simpleSQL
+from sqlparser import parse
+from collections import OrderedDict
 
 class DB:
     def __init__(self, storage):
@@ -18,14 +18,17 @@ class DB:
             self.tables[name] = Table(meta, values)
 
     def execute(self, query):
-        statements = parse(query)
-        context = {}
+        ast = parse(query)
+        env = OrderedDict()
+        self.evaluate(ast, env)
 
-
-    def resolve(self, parsed, context):
-        t = AST(parsed)
-        print(parsed.tokens)
+    def evaluate(self, ast, env):
+        #print("Final Dump:", ast.dump())
+        #print("AsList:")
+        pprint(ast.asList())
         pass
+
+
 
 
 
