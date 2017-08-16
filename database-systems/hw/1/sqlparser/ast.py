@@ -10,8 +10,9 @@ def String(t):
     return ("String", t[0])
 
 def Identifier(t):
+    print(t[0])
     return t[0]
-    return ("Id", t[0])
+    #return ("Id", t[0])
 
 def BinaryOp(t):
     return ("BinaryOp", t[0])
@@ -24,8 +25,6 @@ def Projection(t):
     return ("Projection", t)
 
 def From(t):
-    #print("From:")
-    #pprint(t)
     f, r = t
     return ("From", r)
 
@@ -36,7 +35,6 @@ def Select(t):
     #pprint(t)
     s, p, f, w = t
     return ("Select", (f, w, p))
-
 
 def removeParanthesis(t):
     opening, e, closing = t
@@ -50,7 +48,6 @@ def Function(t):
 
 
 def Nest(t):
-    print(t)
     return t
 
 def Column(t):
@@ -61,6 +58,9 @@ def Columns(t):
 
 def Tables(t):
     return ("Tables", t)
+
+def Table(t):
+    return ("Table", t)
 
 def Functions(t):
     return ("Functions", t)

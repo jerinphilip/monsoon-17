@@ -25,7 +25,7 @@ column = (identifier + Optional('.' + identifier)).setParseAction(Column)
 columns = (delimitedList(column)).setParseAction(Columns)
 
 # Table Defs
-table = (identifier)
+table = (identifier).setParseAction(Table)
 tables = (delimitedList(table)).setParseAction(Tables)
 
 whereExpression = Forward()
@@ -57,9 +57,9 @@ whereExpr << whereCondition + ZeroOrMore((g.or_ | g.and_) + whereExpr)
 whereStruct = (g.where_ + whereExpr).setParseAction(Where)
 
 select = Forward()
-selects = delimitedList(("(" + select + ")").setParseAction(removeParanthesis))
+selects = delimitedList(("(" + select + ")").setParseAction(removeParanthesis)).setParseAction(Tables)
 
-followFrom = (tables | selects).setParseAction(removeParanthesis))
+followFrom = (tables | selects) 
 fromEtc = (g.from_ + followFrom).setParseAction(From)
 
 select <<= (
@@ -71,8 +71,14 @@ select <<= (
 SQL = select
 
 def parse(query):
-    r = SQL.parseString(query)
-    return r
+    try:
+        r = SQL.parseString(query, True)
+        return r
+    except ParseException as e:
+        print("ParseError:")
+        print('\t' + query)
+        print('\t' + ' '*(e.col-1) + '^')
+        exit()
 
 if __name__ == '__main__':
     import sys
