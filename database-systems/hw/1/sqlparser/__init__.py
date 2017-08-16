@@ -14,23 +14,19 @@ reserved = namedtuple('reserved', map(lambda k: k+"_", keywords))
 g = reserved(*ls)
 
 
-identifier = Word(alphas, alphanums + "_$").setName("identifier").\
-        setParseAction(Identifier)
-aggregate = oneOf("min max avg sum", caseless=True).\
-                    setName("aggregate").addParseAction(upcaseTokens)\
+identifier = Word(alphas, alphanums + "_$").setParseAction(Identifier)
+aggregate = oneOf("min max avg sum", caseless=True).setParseAction(upcaseTokens)\
 
 
 # Column Definitions
-column = (delimitedList(identifier, ".", combine=True)).\
-                        setName("column")
-
-columns = (delimitedList(column))
+#column = (delimitedList(identifier, ".", combine=False)).\
+                        #setName("column").setParseAction(Nest)
+column = (identifier + Optional('.' + identifier)).setParseAction(Column)
+columns = (delimitedList(column)).setParseAction(Columns)
 
 # Table Defs
-table = (delimitedList( identifier, ".", combine=True)).\
-            setName("table")
-
-tables = delimitedList(table)
+table = (identifier)
+tables = (delimitedList(table)).setParseAction(Tables)
 
 whereExpression = Forward()
 E = CaselessLiteral("E")
@@ -49,8 +45,7 @@ columnRval = real | integer | quotedString | column
 
 aggrExpr = (aggregate + ("(" + column + ")").setParseAction(removeParanthesis)).\
         setParseAction(Function)
-aggGroup = delimitedList(aggrExpr)
-#tuples = Group( aggGroup | columns | '*' )("tuples").setParseAction(Projection)
+aggGroup = delimitedList(aggrExpr).setParseAction(Functions)
 tuples = ( aggGroup | columns | '*' ).setParseAction(Projection)
 
 compareExpr = (column + compare + columnRval).setParseAction(OpReorder)
@@ -62,8 +57,9 @@ whereExpr << whereCondition + ZeroOrMore((g.or_ | g.and_) + whereExpr)
 whereStruct = (g.where_ + whereExpr).setParseAction(Where)
 
 select = Forward()
+selects = delimitedList(("(" + select + ")").setParseAction(removeParanthesis))
 
-followFrom = (tables | ("(" + select + ")").setParseAction(removeParanthesis))
+followFrom = (tables | selects).setParseAction(removeParanthesis))
 fromEtc = (g.from_ + followFrom).setParseAction(From)
 
 select <<= (

@@ -18,15 +18,41 @@ class DB:
             self.tables[name] = Table(meta, values)
 
     def execute(self, query):
-        ast = parse(query)
-        env = OrderedDict()
+        ast = parse(query).asList()[0]
+        env = OrderedDict() 
         self.evaluate(ast, env)
 
     def evaluate(self, ast, env):
-        #print("Final Dump:", ast.dump())
-        #print("AsList:")
-        pprint(ast.asList())
-        pass
+        cases = []
+
+        print(ast, len(ast))
+        key, value = ast
+        print("Key:", key)
+        if key == 'Select':
+            new_env = OrderedDict()
+            T = self._select(value, new_env)
+            env["result"] = T
+
+        if key == 'From':
+            self._from(value, env)
+
+        if key == 'Tables':
+            if len(value) == 1:
+                name = value[0]
+                env["result"] = self.tables[name]
+                env["result"] = self._project(env)
+
+    def _select(self, ast, env):
+        f, w, p = ast
+        env["where"] = w
+        env["project"] = p
+        self.evaluate(f, env)
+
+    def _project(self, env):
+        
+
+    def _from(self, ast, env):
+        self.evaluate(ast, env)
 
 
 
