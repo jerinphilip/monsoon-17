@@ -19,10 +19,14 @@ class Table:
         return out
 
     def __getitem__(self, keys):
+        return self.get(keys, lambda x: x, "id")
+
+    def get(self, keys, fn, fname):
         dataTranspose = []
-        schema = {"name": "tmp", "attributes": keys}
+        schema = {"name": "%s(tmp)"%(fname), "attributes": keys}
         for key in keys:
-            dataTranspose.append(self.dataTranspose[self.indices[key]])
+            reduced = fn(self.dataTranspose[self.indices[key]])
+            dataTranspose.append(reduced)
         data = list(zip(*dataTranspose))
         return Table(schema, data)
 

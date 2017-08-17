@@ -5,6 +5,7 @@ from pprint import pprint, pformat
 from sqlparser import parse
 from collections import OrderedDict
 from store import Store
+import dops
 
 class Engine:
     def __init__(self, storage):
@@ -41,16 +42,48 @@ class Engine:
         env["project"] = p
         return self.evaluate(f, env)
 
+    def _feval(self, ast, env):
+        tag, body = ast
+        fn, cols = body
+        _, keys = cols
+
+        T = env["result"]
+        error = lambda : "Error in feval"
+
+        cases = {
+            "MAX": lambda : T.get(keys, dops.max_, fn),
+            "MIN": lambda : T.get(keys, dops.min_, fn),
+            "SUM": lambda : T.get(keys, dops.sum_, fn),
+            "AVG": lambda : T.get(keys, dops.avg_, fn),
+            "DISTINCT": lambda : T.get(keys, dops.unique_, fn),
+            "ABS": lambda : T.get(keys, dops.abs_, fn),
+        }
+
+        return cases.get(fn, error)()
+
 
     def _project(self, ast, env):
         T = env["result"]
-        print(ast)
-        return T
+        tag, rest = ast[0]
+        error = lambda: "Invalid"
+
+        def _fevals(cols):
+            f, *fs = cols
+            T = self._feval(f, env)
+            for f in fs:
+                T = zip_join(T, self._feval(f, env))
+            return T
+
+        cases = {
+            "Columns": lambda : T[rest],
+            "Functions": lambda : _fevals(rest),
+            "All": lambda : T
+        }
+        return cases.get(tag, error)()
 
         
     def _table(self, ast, env):
-        Id = ast[0]
-        return self.store.project(Id)
+        return self.store.project(ast)
 
     def _from(self, ast, env):
         tag, tables = ast

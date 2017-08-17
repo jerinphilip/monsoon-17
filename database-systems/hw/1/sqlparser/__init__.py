@@ -13,20 +13,14 @@ ls = list(map(lambda x: Keyword(x, caseless=True), keywords))
 reserved = namedtuple('reserved', map(lambda k: k+"_", keywords))
 g = reserved(*ls)
 
-
 identifier = Word(alphas, alphanums + "_$").setParseAction(Identifier)
-aggregate = oneOf("min max avg sum", caseless=True).setParseAction(upcaseTokens)\
+aggregate = oneOf("min max avg sum abs distinct", caseless=True).setParseAction(upcaseTokens)\
 
 
-# Column Definitions
-#column = (delimitedList(identifier, ".", combine=False)).\
-                        #setName("column").setParseAction(Nest)
-column = (identifier + Optional('.' + identifier)).setParseAction(Column)
+column = (identifier + Optional('.' + identifier))
 columns = (delimitedList(column)).setParseAction(Columns)
 
-# Table Defs
-table = (identifier).setParseAction(Table)
-tables = (delimitedList(table)).setParseAction(Tables)
+tables = (delimitedList(identifier)).setParseAction(Tables)
 
 whereExpression = Forward()
 E = CaselessLiteral("E")
@@ -43,10 +37,11 @@ real = Combine((withLeft | withoutLeft) + mantissa).setParseAction(Real)
 integer = Combine(Optional(sign) + Word(nums) + mantissa).setParseAction(Integer)
 columnRval = real | integer | quotedString | column
 
-aggrExpr = (aggregate + ("(" + column + ")").setParseAction(removeParanthesis)).\
+aggrExpr = (aggregate + ("(" + columns + ")").setParseAction(removeParanthesis)).\
         setParseAction(Function)
 aggGroup = delimitedList(aggrExpr).setParseAction(Functions)
-tuples = ( aggGroup | columns | '*' ).setParseAction(Projection)
+wildCard = Word('*', exact=1).setParseAction(All)
+tuples = ( aggGroup | columns | wildCard ).setParseAction(Projection)
 
 compareExpr = (column + compare + columnRval).setParseAction(OpReorder)
 existCheck = (column + g.in_ + "(" + delimitedList(columnRval) + ")")
@@ -57,7 +52,7 @@ whereExpr << whereCondition + ZeroOrMore((g.or_ | g.and_) + whereExpr)
 whereStruct = (g.where_ + whereExpr).setParseAction(Where)
 
 select = Forward()
-selects = delimitedList(("(" + select + ")").setParseAction(removeParanthesis)).setParseAction(Tables)
+selects = delimitedList(("(" + select + ")").setParseAction(removeParanthesis)).setParseAction(Selects)
 
 followFrom = (tables | selects) 
 fromEtc = (g.from_ + followFrom).setParseAction(From)

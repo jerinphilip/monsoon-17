@@ -10,7 +10,6 @@ def String(t):
     return ("String", t[0])
 
 def Identifier(t):
-    print(t[0])
     return t[0]
     #return ("Id", t[0])
 
@@ -56,11 +55,19 @@ def Column(t):
 def Columns(t):
     return ("Columns", t)
 
-def Tables(t):
-    return ("Tables", t)
+def Tables(ts):
+    tagged_ts = list(map(Table, ts))
+    return ("Tables", tagged_ts)
 
 def Table(t):
     return ("Table", t)
 
 def Functions(t):
     return ("Functions", t)
+
+def All(t):
+    return ("All", t)
+
+def Selects(t):
+    return ("Selects", t)
+
