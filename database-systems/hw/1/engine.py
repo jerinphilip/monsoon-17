@@ -95,6 +95,9 @@ class Engine:
         env["result"] = T
         return self.evaluate(env["project"], env)
 
+    def _where(self, ast, env):
+        pass
+
 if __name__ == '__main__':
     name, command = sys.argv
     cursor = Engine("files")
