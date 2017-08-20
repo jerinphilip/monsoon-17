@@ -38,6 +38,3 @@ class Store:
         if cols is None:
             return self.store[name]
         return self.store[name][cols]
-
-
-

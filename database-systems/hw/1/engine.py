@@ -1,11 +1,11 @@
 import sys, re, csv
 import parser
-from dtype import Table, zip_join
+from dtype import Table
+from dtype import ops 
 from pprint import pprint, pformat
 from sqlparser import parse
 from collections import OrderedDict
 from store import Store
-import dops
 
 class Engine:
     def __init__(self, storage):
@@ -51,12 +51,12 @@ class Engine:
         error = lambda : "Error in feval"
 
         cases = {
-            "MAX": lambda : T.get(keys, dops.max_, fn),
-            "MIN": lambda : T.get(keys, dops.min_, fn),
-            "SUM": lambda : T.get(keys, dops.sum_, fn),
-            "AVG": lambda : T.get(keys, dops.avg_, fn),
-            "DISTINCT": lambda : T.get(keys, dops.unique_, fn),
-            "ABS": lambda : T.get(keys, dops.abs_, fn),
+            "MAX": lambda : T.max(keys),
+            "MIN": lambda : T.min(keys),
+            "SUM": lambda : T.sum(keys),
+            "AVG": lambda : T.avg(keys),
+            "DISTINCT": lambda : T.unique(keys),
+            "ABS": lambda : T.abs(keys)
         }
 
         return cases.get(fn, error)()
@@ -71,7 +71,7 @@ class Engine:
             f, *fs = cols
             T = self._feval(f, env)
             for f in fs:
-                T = zip_join(T, self._feval(f, env))
+                T = ops.tzip(T, self._feval(f, env))
             return T
 
         cases = {
@@ -91,7 +91,7 @@ class Engine:
         T = self.evaluate(first, env)
         for t in ts:
             S = self.evaluate(t, env)
-            T = zip_join(T, S)
+            T = ops.product(T, S)
         env["result"] = T
         return self.evaluate(env["project"], env)
 
