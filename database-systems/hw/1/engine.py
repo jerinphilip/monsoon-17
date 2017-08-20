@@ -75,6 +75,7 @@ class Engine:
                 T = ops.tzip(T, self._feval(f, env))
             return T
 
+
         cases = {
             "Columns": lambda : T[rest],
             "Functions": lambda : _fevals(rest),
@@ -95,17 +96,33 @@ class Engine:
             T = ops.product(T, S)
         env["result"] = T
 
-        T = self.evaluate(env["where"], env)
-        env["result"] = T
-
+        if env["where"] is not None:
+            T = self.evaluate(env["where"], env)
+            env["result"] = T
         return self.evaluate(env["project"], env)
 
     def _where(self, ast, env):
-        print(ast)
-        return env["result"]
+        where, tree = ast
+        return self._bopEval(tree, env)
 
     def _bopEval(self, ast, env):
         """ From env[result], check elements which match ast. """
+        op, args = ast
+        tag, op = op
+        error = lambda: "Invalid Tree:%s"%(pformat(args))
+        T = env["result"]
+        cases = {
+            "AND": lambda : T,
+            "OR" : lambda : T,
+            "="  : lambda : T.eq(*args) ,
+            "!=" : lambda : T.ne(*args),
+            "<"  : lambda : T.lt(*args),
+            ">"  : lambda : T.gt(*args),
+            ">="  : lambda : T.ge(*args),
+            "<="  : lambda : T.le(*args),
+        }
+
+        return cases.get(op, error)()
 
 if __name__ == '__main__':
     name, command = sys.argv

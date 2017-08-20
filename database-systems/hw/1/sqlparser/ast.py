@@ -43,9 +43,7 @@ def removeParanthesis(t):
 
 def Where(t):
     cmd, *args = t
-    #pprint(args)
-
-    return ("Where", args)
+    return ("Where", args[0])
 
 def Function(t):
     return ("Function", t)
@@ -53,6 +51,10 @@ def Function(t):
 
 def Nest(t):
     return tuple([t])
+
+def UnNest(t):
+    assert(len(t) == 1)
+    return t[0]
 
 def Column(t):
     return ("Column", t)
@@ -76,3 +78,13 @@ def All(t):
 def Selects(t):
     return ("Selects", t)
 
+
+def OpTree(t):
+    if len(t) == 3 and t[1] in ['AND', 'OR']:
+        a, op, b = t
+        ra = OpTree(a)
+        rb = OpTree(b)
+        op = ("BinaryOp", op)
+        return (op, (ra, rb))
+    else:
+        return t

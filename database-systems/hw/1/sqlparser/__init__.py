@@ -9,7 +9,7 @@ keywords = [
         "and", "or", "not", "in"
 ]
 
-ls = list(map(lambda x: Keyword(x, caseless=True), keywords))
+ls = list(map(lambda x: Keyword(x, caseless=True).addParseAction(upcaseTokens), keywords))
 reserved = namedtuple('reserved', map(lambda k: k+"_", keywords))
 g = reserved(*ls)
 
@@ -45,10 +45,14 @@ tuples = ( aggGroup | columns | wildCard ).setParseAction(Projection)
 
 compareExpr = (column + compare + columnRval).setParseAction(OpReorder)
 existCheck = (column + g.in_ + "(" + delimitedList(columnRval) + ")")
-whereExpr = Forward()
-
-whereCondition = (compareExpr | existCheck | ("(" + whereExpr + ")").setParseAction(removeParanthesis, Nest))
-whereExpr << whereCondition + ZeroOrMore((g.or_ | g.and_) + whereExpr)
+#whereExpr = Forward()
+#whereCondition = (compareExpr | existCheck | ("(" + whereExpr + ")").setParseAction(removeParanthesis, Nest))
+# whereExpr << (whereCondition + ZeroOrMore((g.or_ | g.and_) + whereExpr))
+whereExpr = (compareExpr | existCheck)
+whereExpr  = infixNotation(whereExpr, [
+                        (g.or_, 2, opAssoc.RIGHT),
+                        (g.and_, 2, opAssoc.RIGHT),
+                    ]).setParseAction(UnNest, OpTree)
 whereStruct = (g.where_ + whereExpr).setParseAction(Where)
 
 select = Forward()
@@ -68,13 +72,13 @@ SQL = select
 def parse(query):
     try:
         r = SQL.parseString(query, True)
-        print(r.asList())
-        exit()
+        #pprint(r.asList())
         return r
     except ParseException as e:
         print("ParseError:")
         print('\t' + query)
         print('\t' + ' '*(e.col-1) + '^')
+        print(e)
         exit()
 
 if __name__ == '__main__':

@@ -86,3 +86,32 @@ class Table:
     def __or__(self, other):
         data = list(set(self.data) | set(other.data))
         return Table(self.schema, data)
+
+
+    def _filter(self, attr, value, fn):
+        index = self.indices[attr]
+        data = []
+        _, value = value
+        for i, h in enumerate(self.dataTranspose[index]):
+            #print(i, h)
+            if fn(h, value): data.append(self.data[i])
+
+        return Table(self.schema, data)
+
+    def eq(self, attr, value):
+        return self._filter(attr, value, op.eq)
+
+    def lt(self, attr, value):
+        return self._filter(attr, value, op.lt)
+
+    def gt(self, attr, value):
+        return self._filter(attr, value, op.gt)
+
+    def ne(self, attr, value):
+        return self._filter(attr, value, op.ne)
+
+    def ge(self, attr, value):
+        return self._filter(attr, value, op.ge)
+
+    def le(self, attr, value):
+        return self._filter(attr, value, op.le)
