@@ -92,14 +92,25 @@ class Table:
 
 
     def _filter(self, attr, value, fn):
-        index = self.indices[attr]
-        data = []
-        _, value = value
-        for i, h in enumerate(self.dataTranspose[index]):
-            #print(i, h)
-            if fn(h, value): data.append(self.data[i])
+        if type(value) == list:
+            index = self.indices[attr]
+            data = []
+            _, value = value
+            for i, h in enumerate(self.dataTranspose[index]):
+                #print(i, h)
+                if fn(h, value): data.append(self.data[i])
 
-        return Table(self.schema, data)
+            return Table(self.schema, data)
+        else:
+            print(attr, value)
+            xi = self.indices[attr]
+            yi = self.indices[value]
+            data = []
+            ps = zip(self.dataTranspose[xi], self.dataTranspose[yi])
+            for i, p in enumerate(ps):
+                x, y = p
+                if fn(x, y): data.append(self.data[i])
+            return Table(self.schema, data)
 
     def eq(self, attr, value):
         return self._filter(attr, value, op.eq)

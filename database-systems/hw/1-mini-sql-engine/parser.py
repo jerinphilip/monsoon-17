@@ -8,6 +8,7 @@ def meta(meta_fn):
 
     def load(match):
         name, *attrs = match.split('\n')
+        attrs = list(map(lambda x: "%s.%s"%(name, x), attrs))
         d = dict([("name", name), ("attributes", attrs)])
         return d
 

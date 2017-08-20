@@ -17,7 +17,7 @@ identifier = Word(alphas, alphanums + "_$").setParseAction(Identifier)
 aggregate = oneOf("min max avg sum abs distinct", caseless=True).setParseAction(upcaseTokens)\
 
 
-column = (identifier + Optional('.' + identifier))
+column = Combine(identifier + Optional('.' + identifier))
 columns = (delimitedList(column)).setParseAction(Columns)
 
 tables = (delimitedList(identifier)).setParseAction(Tables)
