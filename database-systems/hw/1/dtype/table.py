@@ -78,13 +78,16 @@ class Table:
     def __div__(self, other):
         return self._bop(self, other, op.div)
 
+    def toTuple(self):
+        x = tuple(map(tuple, self.data))
+        return x
 
     def __and__(self, other):
-        data = list(set(self.data) & set(other.data))
+        data = list(set(self.toTuple()) & set(other.toTuple()))
         return Table(self.schema, data)
 
     def __or__(self, other):
-        data = list(set(self.data) | set(other.data))
+        data = list(set(self.toTuple()) | set(other.toTuple()))
         return Table(self.schema, data)
 
 

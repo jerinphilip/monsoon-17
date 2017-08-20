@@ -109,17 +109,18 @@ class Engine:
         """ From env[result], check elements which match ast. """
         op, args = ast
         tag, op = op
+        x, y = args
         error = lambda: "Invalid Tree:%s"%(pformat(args))
         T = env["result"]
         cases = {
-            "AND": lambda : T,
-            "OR" : lambda : T,
-            "="  : lambda : T.eq(*args) ,
-            "!=" : lambda : T.ne(*args),
-            "<"  : lambda : T.lt(*args),
-            ">"  : lambda : T.gt(*args),
-            ">="  : lambda : T.ge(*args),
-            "<="  : lambda : T.le(*args),
+            "AND" : lambda : self._bopEval(x, env) & self._bopEval(y, env),
+            "OR"  : lambda : self._bopEval(x, env) | self._bopEval(y, env),
+            "="   : lambda : T.eq(x, y) ,
+            "!="  : lambda : T.ne(x, y),
+            "<"   : lambda : T.lt(x, y),
+            ">"   : lambda : T.gt(x, y),
+            ">="  : lambda : T.ge(x, y),
+            "<="  : lambda : T.le(x, y),
         }
 
         return cases.get(op, error)()
