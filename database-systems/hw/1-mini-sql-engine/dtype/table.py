@@ -91,7 +91,7 @@ class Table:
         return Table(schema, data)
 
     def __eq__(self, other):
-        return self.data == self.data
+        return self.data == other.data
 
     def __add__(self, other):
         return self._bop(self, other, op.add)
