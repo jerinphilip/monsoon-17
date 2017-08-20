@@ -57,7 +57,7 @@ def UnNest(t):
     return t[0]
 
 def Column(t):
-    return ("Column", t)
+    return ("Column", t[0])
 
 def Columns(t):
     return ("Columns", t)

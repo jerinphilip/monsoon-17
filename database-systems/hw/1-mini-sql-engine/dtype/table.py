@@ -10,6 +10,12 @@ class Table:
         self.ncols = len(self.dataTranspose)
         attrs = schema["attributes"]
         self.indices = dict(zip(attrs, range(len(attrs))))
+        table_names, cols = list(zip(*map(lambda x: x.split('.'), attrs)))
+        self.ambiguous = dict(zip(cols, range(len(cols))))
+        self.tables = list(set(table_names))
+        self.inverse = dict([(col, []) for col in cols])
+        for tn, col in zip(table_names, cols):
+            self.inverse[col].append(tn)
 
     def __str__(self):
         pcol = lambda x: "%s"%(x)
@@ -24,8 +30,23 @@ class Table:
     def __getitem__(self, keys):
         return self.get(keys, lambda x: x, "id")
 
+    def _namespaced(self, keys):
+        nkeys = []
+        for key in keys:
+            ls = key.split('.')
+            if len(ls) == 1:
+                ckey = ls[0]
+                table = self.inverse[ckey][0]
+                nkeys.append("%s.%s"%(table, ckey))
+            else:
+                nkeys.append(key)
+        return nkeys
+
+
     def get(self, keys, fn, fname="tmp"):
         dataTranspose = []
+        types, keys = list(zip(*keys))
+        keys = self._namespaced(keys)
         schema = {"name": "%s(tmp)"%(fname), "attributes": keys}
         for key in keys:
             reduced = fn(self.dataTranspose[self.indices[key]])
@@ -91,25 +112,25 @@ class Table:
         return Table(self.schema, data)
 
 
-    def _filter(self, attr, value, fn):
-        if type(value) == list:
-            index = self.indices[attr]
-            data = []
-            _, value = value
-            for i, h in enumerate(self.dataTranspose[index]):
-                #print(i, h)
-                if fn(h, value): data.append(self.data[i])
-
-            return Table(self.schema, data)
-        else:
-            print(attr, value)
-            xi = self.indices[attr]
-            yi = self.indices[value]
+    def _filter(self, left, right, fn):
+        ltype, lval = left
+        rtype, rval = right
+        if ltype == "Column" and rtype == "Column":
+            xi = self.indices[lval]
+            yi = self.indices[rval]
             data = []
             ps = zip(self.dataTranspose[xi], self.dataTranspose[yi])
             for i, p in enumerate(ps):
                 x, y = p
                 if fn(x, y): data.append(self.data[i])
+            return Table(self.schema, data)
+        else:
+            index = self.indices[lval]
+            data = []
+            for i, h in enumerate(self.dataTranspose[index]):
+                #print(i, h)
+                if fn(h, rval): data.append(self.data[i])
+
             return Table(self.schema, data)
 
     def eq(self, attr, value):
