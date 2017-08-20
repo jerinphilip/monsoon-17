@@ -119,8 +119,8 @@ class Table:
         ltype, lval = left
         rtype, rval = right
         lval = self._namespaced(lval)
-        rval = self._namespaced(rval)
         if ltype == "Column" and rtype == "Column":
+            rval = self._namespaced(rval)
             xi = self.indices[lval]
             yi = self.indices[rval]
             data = []

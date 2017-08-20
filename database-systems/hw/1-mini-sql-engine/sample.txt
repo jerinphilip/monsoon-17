@@ -1,5 +1,5 @@
 select * from table1;
 select table1.A, table1.B from table1;
 select A, B from table1;
-select SUM(A,B,C),SUM(B, D) from table1, table2 where table1.B = table2.B;
+select SUM(A,table1.B,C),SUM(table2.B, D) from table1, table2 where table1.B = table2.B;
 select * from table1, table2 where A < D and table1.B = table2.B;

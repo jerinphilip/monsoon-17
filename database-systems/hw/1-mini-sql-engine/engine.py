@@ -136,6 +136,7 @@ if __name__ == '__main__':
     commands = open("sample.txt").read().splitlines()
     for command in commands:
         results = cursor.execute(command)
+        print("\n"+"-"*10)
         print(command)
         for table in results:
             print(table)
