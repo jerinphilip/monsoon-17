@@ -17,9 +17,14 @@ class Engine:
             self.store.load(meta)
 
     def execute(self, query):
-        ast = parse(query).asList()[0]
-        env = OrderedDict()
-        return self.evaluate(ast, env)
+        asts = parse(query).asList()
+        rs = []
+        for ast in asts:
+            env = OrderedDict()
+            r = self.evaluate(ast, env)
+            rs.append(r)
+        return rs
+
 
     def evaluate(self, ast, env):
         key, value = ast
@@ -128,7 +133,8 @@ class Engine:
 if __name__ == '__main__':
     name, command = sys.argv
     cursor = Engine("files")
-    result = cursor.execute(command)
-    print(result)
+    results = cursor.execute(command)
+    for table in results:
+        print(table)
 
 

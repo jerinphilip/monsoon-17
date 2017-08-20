@@ -67,7 +67,8 @@ select <<= (
         fromEtc +
         Optional(whereStruct, None)).setParseAction(Select)
 
-SQL = select
+#SQL = select + ZeroOrMore(";" + select)
+SQL = delimitedList(select, delim=";") + Suppress(Optional(";"))
 
 def parse(query):
     try:
