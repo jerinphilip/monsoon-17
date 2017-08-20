@@ -21,10 +21,10 @@ def tzip(S, T):
     if S.nrows != T.nrows:
         raise EntryMisMatchError
     else:
-        rval = self._namespaced(rval)
         attrs = S.schema["attributes"] + T.schema["attributes"]
         data = list(zip(*(S.dataTranspose + T.dataTranspose)))
         name = "zip_join(%s, %s)"%(S.schema["name"], T.schema["name"])
         schema = {"name": name, "attributes": attrs}
         return Table(schema, data)
+
 
