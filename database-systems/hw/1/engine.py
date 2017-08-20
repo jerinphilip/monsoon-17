@@ -30,6 +30,7 @@ class Engine:
             "From": (lambda : self._from(value, env)),
             "Table": (lambda : self._table(value, env)),
             "Projection": (lambda : self._project(value, env)),
+            "Where": (lambda : self._where(ast, env))
         }
     
         v = cases.get(key, error)
@@ -93,10 +94,18 @@ class Engine:
             S = self.evaluate(t, env)
             T = ops.product(T, S)
         env["result"] = T
+
+        T = self.evaluate(env["where"], env)
+        env["result"] = T
+
         return self.evaluate(env["project"], env)
 
     def _where(self, ast, env):
-        pass
+        print(ast)
+        return env["result"]
+
+    def _bopEval(self, ast, env):
+        """ From env[result], check elements which match ast. """
 
 if __name__ == '__main__':
     name, command = sys.argv

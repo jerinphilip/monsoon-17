@@ -36,18 +36,23 @@ def Select(t):
     return ("Select", (f, w, p))
 
 def removeParanthesis(t):
-    opening, e, closing = t
+    #opening, e, closing = t
+    assert(len(t) >= 3)
+    e = t[1:-1]
     return e
 
 def Where(t):
-    return ("Where", t[1])
+    cmd, *args = t
+    #pprint(args)
+
+    return ("Where", args)
 
 def Function(t):
     return ("Function", t)
 
 
 def Nest(t):
-    return t
+    return tuple([t])
 
 def Column(t):
     return ("Column", t)

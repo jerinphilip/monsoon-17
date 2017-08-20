@@ -47,7 +47,7 @@ compareExpr = (column + compare + columnRval).setParseAction(OpReorder)
 existCheck = (column + g.in_ + "(" + delimitedList(columnRval) + ")")
 whereExpr = Forward()
 
-whereCondition = (compareExpr | existCheck | ("(" + whereExpr + ")").setParseAction(removeParanthesis))
+whereCondition = (compareExpr | existCheck | ("(" + whereExpr + ")").setParseAction(removeParanthesis, Nest))
 whereExpr << whereCondition + ZeroOrMore((g.or_ | g.and_) + whereExpr)
 whereStruct = (g.where_ + whereExpr).setParseAction(Where)
 
@@ -68,6 +68,8 @@ SQL = select
 def parse(query):
     try:
         r = SQL.parseString(query, True)
+        print(r.asList())
+        exit()
         return r
     except ParseException as e:
         print("ParseError:")
