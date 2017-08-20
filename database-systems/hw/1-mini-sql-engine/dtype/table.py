@@ -30,23 +30,26 @@ class Table:
     def __getitem__(self, keys):
         return self.get(keys, lambda x: x, "id")
 
-    def _namespaced(self, keys):
+    def _namespaced_ls(self, keys):
         nkeys = []
         for key in keys:
-            ls = key.split('.')
-            if len(ls) == 1:
-                ckey = ls[0]
-                table = self.inverse[ckey][0]
-                nkeys.append("%s.%s"%(table, ckey))
-            else:
-                nkeys.append(key)
+            nkeys.append(self._namespaced(key))
         return nkeys
+
+    def _namespaced(self, key):
+        ls = key.split('.')
+        if len(ls) == 1:
+            ckey = ls[0]
+            table = self.inverse[ckey][0]
+            return "%s.%s"%(table, key)
+        else:
+            return key
 
 
     def get(self, keys, fn, fname="tmp"):
         dataTranspose = []
         types, keys = list(zip(*keys))
-        keys = self._namespaced(keys)
+        keys = self._namespaced_ls(keys)
         schema = {"name": "%s(tmp)"%(fname), "attributes": keys}
         for key in keys:
             reduced = fn(self.dataTranspose[self.indices[key]])
@@ -115,6 +118,8 @@ class Table:
     def _filter(self, left, right, fn):
         ltype, lval = left
         rtype, rval = right
+        lval = self._namespaced(lval)
+        rval = self._namespaced(rval)
         if ltype == "Column" and rtype == "Column":
             xi = self.indices[lval]
             yi = self.indices[rval]
