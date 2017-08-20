@@ -1,0 +1,41 @@
+graph G {
+    node [shape="rectangle"];
+    edge [arrowhead=vee, arrowtail=vee];
+
+    subgraph cluster_employee {
+        edge [arrowhead=vee, arrowtail=vee];
+        label = "Employee";
+        rankdir = "TB";
+        Fname;
+        Minit;
+        Lname;
+        SSN;
+        Bdate;
+        Address;
+        Sex;
+        Salary;
+        Super_SSN;
+        Dno;
+        Employee [style="invis"];
+    }
+
+    subgraph cluster_project {
+        edge [arrowhead=vee, arrowtail=vee];
+        label = "Project";
+        Pname;
+        Pnumber;
+        Plocation;
+        Dnum;
+
+        Project [style="invis"];
+    }
+
+    //Project -- Hours;
+    //Employee -- Hours;
+    Hours -- Employee;
+    Hours -- Project;
+
+    //Employee -- Project [style="invis"];
+    Project -- Employee [style="invis"];
+
+}

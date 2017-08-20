@@ -1,0 +1,31 @@
+digraph G {
+    node [shape="rectangle"];
+
+    subgraph cluster_employee {
+        rankdir = "TB";
+        EMPLOYEE -> Fname;
+        EMPLOYEE -> Minit;
+        EMPLOYEE -> Lname;
+        EMPLOYEE -> SSN;
+        EMPLOYEE -> Bdate;
+        EMPLOYEE -> Address;
+        EMPLOYEE -> Sex;
+        EMPLOYEE -> Salary;
+        EMPLOYEE -> Super_SSN;
+        EMPLOYEE -> Dno;
+    }
+
+    subgraph cluster_project {
+        PROJECT -> Pname;
+        PROJECT -> Pnumber;
+        PROJECT -> Plocation;
+        PROJECT -> Dnum;
+    }
+
+    subgraph cluster_work {
+        WORKS_ON -> Hours;
+    }
+
+    EMPLOYEE -> PROJECT;
+    PROJECT -> WORKS_ON;
+}

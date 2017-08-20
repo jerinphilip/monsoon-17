@@ -1,0 +1,14 @@
+digraph G {
+    node [shape="record"];
+    //graph [splines=ortho];
+    rankdir = "BT";
+    employee [label="{EMPLOYEE |{Fname|Minit|Lname|<ssn> Ssn|Bdate|Address|Sex|Salary|Super_ssn|Dno}}"];
+    project [label="{<pstart> PROJECT | {Pname|<pno> Pnumber|Plocation|Dnum}}"];
+    works_on [label="WORKS_ON | {<ssn> Essn|<pno> Pno|Hours}"];
+    works_on:ssn -> employee:ssn [style="dashed", arrowhead="normal", arrowtail="dot"];
+    works_on:pno -> project:pno [style="dashed"arrowhead="normal", arrowtail="dot"];
+
+    project:pstart -> employee:ssn [style="invis"];
+    //employee:ssn -> project:pstart [style="invis"];
+
+}
