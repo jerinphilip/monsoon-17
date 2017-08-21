@@ -4,3 +4,6 @@ select A, B from table1;
 select SUM(A,table1.B,C),SUM(table2.B, D) from table1, table2 where table1.B = table2.B;
 select * from table1, table2 where A < D and table1.B = table2.B;
 select A, B from (select A, B from table1);
+select COUNT(A),SUM(B) from table1 where C>B;
+select DISTINCT(A,B) from table1;
+select DISTINCT(A, B) from table1 where A < B;

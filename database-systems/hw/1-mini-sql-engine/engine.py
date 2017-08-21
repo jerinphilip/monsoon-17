@@ -61,8 +61,9 @@ class Engine:
             "MIN": lambda : T.min(keys),
             "SUM": lambda : T.sum(keys),
             "AVG": lambda : T.avg(keys),
-            "DISTINCT": lambda : T.unique(keys),
-            "ABS": lambda : T.abs(keys)
+            "DISTINCT": lambda : T.distinct(keys),
+            "ABS": lambda : T.abs(keys),
+            "COUNT": lambda : T.count(keys)
         }
 
         return cases.get(fn, error)()

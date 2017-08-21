@@ -11,6 +11,7 @@ sum_ = wrapped(sum)
 max_ = wrapped(max)
 min_ = wrapped(min)
 avg_ = wrapped(avg)
+count_ = wrapped(len)
 
 def unique_(ls):
     return list(set(ls))

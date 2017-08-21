@@ -76,6 +76,9 @@ class Table:
     def abs(self, key):
         return self.get(key, dops.abs_, "ABS")
 
+    def count(self, key):
+        return self.get(key, dops.count_, "COUNT")
+
     def _bop(self, other, fn):
         assert(self.ncols == 1 and other.ncols == 1)
         assert(self.nrows == other.nrows)

@@ -26,5 +26,3 @@ def tzip(S, T):
         name = "zip_join(%s, %s)"%(S.schema["name"], T.schema["name"])
         schema = {"name": name, "attributes": attrs}
         return Table(schema, data)
-
-

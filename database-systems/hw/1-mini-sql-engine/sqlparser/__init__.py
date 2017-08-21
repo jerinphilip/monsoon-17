@@ -14,7 +14,7 @@ reserved = namedtuple('reserved', map(lambda k: k+"_", keywords))
 g = reserved(*ls)
 
 identifier = Word(alphas, alphanums + "_$").setParseAction(Identifier)
-aggregate = oneOf("min max avg sum abs distinct", caseless=True).setParseAction(upcaseTokens)\
+aggregate = oneOf("min max avg sum abs distinct count", caseless=True).setParseAction(upcaseTokens)\
 
 
 column = Combine(identifier + Optional('.' + identifier)).setParseAction(Column)
