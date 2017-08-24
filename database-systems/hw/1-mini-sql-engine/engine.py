@@ -135,10 +135,11 @@ if __name__ == '__main__':
     #name, command = sys.argv
     cursor = Engine("files")
     commands = open("sample.txt").read().splitlines()
-    for command in commands:
-        results = cursor.execute(command)
+    for lineno, command in enumerate(commands):
         print("\n"+"-"*10)
+        print(lineno)
         print(command)
+        results = cursor.execute(command)
         for table in results:
             print(table)
 

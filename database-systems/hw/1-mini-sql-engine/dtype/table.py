@@ -142,7 +142,25 @@ class Table:
             return Table(self.schema, data)
 
     def eq(self, attr, value):
-        return self._filter(attr, value, op.eq)
+        T = self._filter(attr, value, op.eq)
+        return self.remove_duplicate(T, attr, value)
+        #return T
+
+    def remove_duplicate(self, T, left, right):
+        ltype, lval = left
+        rtype, rval = right
+        lval = self._namespaced(lval)
+        if ltype == "Column" and rtype == "Column":
+            rval = self._namespaced(rval)
+            keys = T.schema["attributes"]
+            keys.remove(lval)
+            types = [ltype for i in range(len(keys))]
+            keys = list(zip(types, keys))
+            result =  T[keys]
+            return result
+        else:
+            return T
+        
 
     def lt(self, attr, value):
         return self._filter(attr, value, op.lt)
