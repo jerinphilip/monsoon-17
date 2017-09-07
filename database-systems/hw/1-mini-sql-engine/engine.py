@@ -5,7 +5,7 @@ from dtype import ops
 from pprint import pprint, pformat
 from sqlparser import parse
 from collections import OrderedDict
-from store import Store
+from store import Store, InvalidTable
 
 class Engine:
     def __init__(self, storage):
@@ -139,8 +139,10 @@ if __name__ == '__main__':
         print("\n"+"-"*10)
         print(lineno)
         print(command)
-        results = cursor.execute(command)
-        for table in results:
-            print(table)
-
+        try:
+            results = cursor.execute(command)
+            for table in results:
+                print(table)
+        except InvalidTable as e:
+            print(e)
 

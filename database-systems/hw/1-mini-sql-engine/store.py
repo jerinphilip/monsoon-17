@@ -36,5 +36,16 @@ class Store:
 
     def project(self, name, cols=None):
         if cols is None:
-            return self.store[name]
+            if name in self.store:
+                return self.store[name]
+            else:
+                raise InvalidTable(name)
         return self.store[name][cols]
+
+
+class InvalidTable(Exception):
+    def __init__(self, table):
+        self.invalid = table
+
+    def __str__(self):
+        return "Error:\n%s: This table does not exist"%(self.invalid)
