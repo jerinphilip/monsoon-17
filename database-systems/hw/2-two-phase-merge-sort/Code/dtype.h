@@ -8,7 +8,6 @@ class table {
     vector<row> *T;
 
     public:
-
     table(){
         T = new vector<row>;
     }
