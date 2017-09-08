@@ -52,9 +52,13 @@ class table {
         T->push_back(x);
     }
 
-    void sort_by_col(int col){
-        auto compare = [&col](row x, row y){
-            return x[col] < y[col];
+    void sort_by_col(vector<int> cols){
+        auto compare = [&cols](row x, row y){
+            for(auto &col: cols){
+                if(x[col] != y[col])
+                    return x[col] < y[col];
+            }
+            return false;
         };
         sort(T->begin(), T->end(), compare); 
     }

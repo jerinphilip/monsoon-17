@@ -10,18 +10,26 @@ int main(int argc, char *argv[]){
     string inputname(argv[2]);
     bufIO b(meta, inputname);
 
+    string mb_size_str(argv[4]);
+    int mb = atoi(mb_size_str.c_str());
+    string sortorder(argv[5]);
     int unit = 1024*1024;
-    int RAM = 1*unit;
+    int RAM = mb*unit;
     //RAM = 120*94;
     vector<string> intermediates;
 
     int count = 0;
-    int column = 0;
+    vector<int> order;
+    string arg;
+    for(int i=6; i<argc; i++){
+        arg = string(argv[i]);
+        order.push_back(meta.index[arg]);
+    }
     while (!b.eof()){
         count += 2;
         //cout << count << endl;
         table *t = b.read(RAM);
-        t->sort_by_col(column);
+        t->sort_by_col(order);
         string chunkname = to_string(count) + ".imd";
         fstream f(chunkname, ios::out);
         f << (*t) ;
@@ -46,8 +54,12 @@ int main(int argc, char *argv[]){
     }
 
     typedef pair<pack*, row> heapnode;
-    auto compare = [&column](heapnode x, heapnode y){
-        return x.second[column] > y.second[column];
+    auto compare = [&order](heapnode x, heapnode y){
+        for(auto &col: order){
+            if(x.second[col] != y.second[col])
+                return x.second[col] > y.second[col];
+        }
+        return false;
     };
 
 
