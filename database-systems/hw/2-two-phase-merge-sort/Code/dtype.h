@@ -39,6 +39,7 @@ struct info {
 
 };
 
+
 class table {
     vector<row> *T;
 
@@ -46,25 +47,46 @@ class table {
     table(){
         T = new vector<row>;
     }
+
     void insert(row x){
         T->push_back(x);
     }
 
     void sort_by_col(int col){
-        auto comparator = [&col](row x, row y){
+        auto compare = [&col](row x, row y){
             return x[col] < y[col];
         };
-        sort(T->begin(), T->end(), comparator); 
+        sort(T->begin(), T->end(), compare); 
+    }
+
+    row at(int x){
+        return T->at(x);
     }
 
     friend ostream & operator << (ostream &out, table &t){
         for(auto &row: *(t.T)){
+            int count = 0;
             for(auto &datum: row){
-                out << datum << "  ";
+                out << datum; 
+                count += 1;
+                if ( count < (int)row.size())
+                    out << "  ";
             }
-            out << "\n";
+            out << "\r\n";
         }
         return out;
+    }
+
+    int size(){
+        return T->size();
+    }
+
+    void clear(){
+        T->clear();
+    }
+
+    ~table(){
+        delete T;
     }
 
 };

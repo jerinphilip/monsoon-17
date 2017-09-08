@@ -17,9 +17,9 @@ class bufIO {
             input.open(inputname.c_str(), ios::in);
         }
 
-        table read(int max_size){
+        table* read(int max_size){
             int nrecords = max_size/meta.record_length;
-            table t;
+            table *t = new table();
             string line, datum;
             int count = 0;
             while ( count < nrecords ){
@@ -28,6 +28,8 @@ class bufIO {
                 }
                 else{
                     getline(input, line);
+                    //cout << line << endl;
+                    //cout << line.size() << " " << meta.expected_size << endl;
                     if((int)line.size() == meta.expected_size){
                         vector<string> tuple;
                         count += 1;
@@ -35,11 +37,11 @@ class bufIO {
                             datum = line.substr(p.first, p.second);
                             tuple.push_back(datum);
                         }
-                        t.insert(tuple);
+                        t->insert(tuple);
                     }
                 }
             }
-            cout<<"Loaded "<<count<<" records.\n";
+            //cout<<"Loaded "<<count<<" records. (" << inputname << ")\n";
             return t;
         }
 
