@@ -1,8 +1,7 @@
 #include "bits/stdc++.h"
-#ifndef DTYPE_H
-#define DTYPE_H
 #include "dtype.h"
-#endif
+using namespace std;
+
 class bufIO {
     string inputname, metaname;
     fstream input;

@@ -1,79 +1,7 @@
-/* Buffered IO Class, to read tables in parts. */
 #include <bits/stdc++.h> 
-#ifndef DTYPE_H 
-#define DTYPE_H
-#include "dtype.h"
-#endif
-#include "bufio.h"
+#include "io.h"
+
 using namespace std;
-
-struct pack{
-    string name;
-    bufIO *b;
-    table *t;
-    int current, size, nRecords;
-
-    pack(info meta, string filename, int sz){
-        current = 0;
-        name = filename;
-        b = new bufIO(meta, name);
-        size = sz;
-        read();
-    }
-
-    bool complete(){
-        return b->eof() and current == nRecords;
-    }
-
-    row next(){
-        assert(not complete());
-        row r = t->at(current);
-        current = current + 1;
-        if (current == nRecords){
-            /* Possible segfault */
-            delete t;
-            read();
-            current = 0;
-        }
-        return r;
-    }
-
-    void read(){
-        t = b->read(size);
-        nRecords = t->size();
-    }
-
-};
-
-struct output{
-    string name;
-    info meta;
-    fstream out;
-    int size;
-    int maxRecords;
-    table t;
-
-    output(info meta, string name, int size): 
-        meta(meta), name(name),
-        size(size){
-        out.open(name, ios::out);
-
-        maxRecords = size/meta.record_length;
-    }
-
-    void insert(row r){
-        t.insert(r);
-        if(t.size() == maxRecords){
-            flush();
-        }
-    }
-
-    void flush(){
-        out << t;
-        t.clear();
-    }
-
-};
 
 int main(int argc, char *argv[]){
     string metaname(argv[1]);
@@ -84,11 +12,11 @@ int main(int argc, char *argv[]){
 
     int unit = 1024*1024;
     int RAM = 1*unit;
-    RAM = 120*94;
+    //RAM = 120*94;
     vector<string> intermediates;
 
     int count = 0;
-    int column = 2;
+    int column = 0;
     while (!b.eof()){
         count += 2;
         //cout << count << endl;
@@ -106,6 +34,10 @@ int main(int argc, char *argv[]){
 
     int N = intermediates.size();
     int sublist_size = RAM/(N + 1);
+
+    if (not sublist_size){
+        cerr << "Not sortable. Monster huge." << endl;
+    }
 
     vector<pack> V;
     for(auto &intermediate: intermediates){
@@ -143,11 +75,6 @@ int main(int argc, char *argv[]){
             heapnode h = make_pair(p, p->next());
             Q.push(h);
         }
-
-        for(auto &d: r){
-            cout << d << " ";
-        }
-        cout << endl;
 
         outbuffer.insert(r);
     }
