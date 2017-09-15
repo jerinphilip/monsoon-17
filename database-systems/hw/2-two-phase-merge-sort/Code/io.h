@@ -13,6 +13,7 @@ struct pack{
         name = filename;
         b = new bufIO(meta, name);
         size = sz;
+        t = NULL;
         read();
     }
 
@@ -31,6 +32,9 @@ struct pack{
             current = 0;
         }
         return r;
+    }
+    ~pack(){
+        //delete b;
     }
 
     void read(){
@@ -67,6 +71,11 @@ struct output{
         out << t;
         t.clear();
     }
+
+    ~output(){
+        out.close();
+    }
+
 
 };
 
