@@ -1,5 +1,5 @@
 import random
-from dba3.block import RecordBlock, BlockOverFlowError
+from dba3.block import RecordBlock, BlockOverflowError
 
 def generate(**kw):
     """ Generates and write outs to a file """
@@ -40,7 +40,7 @@ def generate(**kw):
             duplicates = random.sample(rows, kw['duplicates'])
             for row in duplicates:
                 output.write(row)
-        except BlockOverFlowError:
+        except BlockOverflowError:
             overflow = True
 
         
