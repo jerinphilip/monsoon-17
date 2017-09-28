@@ -36,7 +36,6 @@ class Block:
         self.size = len(contents)
         return contents
 
-
     def close(self):
         self.fp.close()
 
