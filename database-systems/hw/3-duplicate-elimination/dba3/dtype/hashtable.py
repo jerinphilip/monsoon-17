@@ -10,5 +10,13 @@ class SimpleHashTable(IndexBase):
     def add(self, record):
         self.table.add(record)
 
+class Block:
+    def __init__(self):
+        self.fnames = []
+
+    def add(self):
+        pass
+
+
 class HashTable(IndexBase):
     pass
