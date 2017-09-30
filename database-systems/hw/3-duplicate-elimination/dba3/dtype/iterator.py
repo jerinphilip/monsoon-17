@@ -7,7 +7,6 @@ class Iterator:
         self.count = 0
         self.buffer = deque()
         self.flag = True
-        print("Max: ", self.max)
 
     def tocsv(self, record):
         return ','.join(map(str, record))
@@ -52,7 +51,6 @@ class Iterator:
             record = self.fromcsv(stripped)
             self.put(record)
             if self.full(): 
-                print("Scanned in", self.max)
                 self.flag =  True
                 return True
         self.flag = False
