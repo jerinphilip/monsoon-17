@@ -3,6 +3,7 @@ from .block import Block
 class RecordBlock(Block):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.count = 0
 
     def tocsv(self, record):
         return ','.join(map(str, record))

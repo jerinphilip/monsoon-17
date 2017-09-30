@@ -7,6 +7,8 @@ concept.
 
 """
 
+import os
+
 class BlockOverflowError(Exception):
     pass
 
@@ -15,26 +17,23 @@ class Block:
     def __init__(self, **kwargs):
         self.name = kwargs['name']
         self.max = kwargs['size']
-        try:
-            self.fp = open(self.name, 'x+')
-            self.size = 0
-        except FileExistsError:
+        if os.path.exists(self.name):
             self.fp = open(self.name, 'r+')
             self.read()
-            
+        else:
+            self.fp = open(self.name, 'w')
+            self.size = 0
 
     def write(self, output):
-        if self.size + len(output) > self.max:
-            raise BlockOverflowError
-
-        self.fp.write(output)
         self.size += len(output)
+        self.fp.write(output)
 
     def read(self):
         # Assuming a block, character IO
-        contents = self.fp.read()
-        self.size = len(contents)
-        return contents
+        self.fp = open(self.name, 'r+')
+        data = self.fp.read()
+        self.size = len(data)
+        return data
 
     def close(self):
         self.fp.close()

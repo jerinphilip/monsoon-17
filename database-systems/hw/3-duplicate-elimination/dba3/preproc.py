@@ -44,11 +44,10 @@ def generate(**kw):
             overflow = True
 
         
-
-
 if __name__ == '__main__':
     kb = 1024
+    random.seed(100)
     samples = generate(output_file='records.csv', 
-            size=kb**2,
+            size=kb**3,
             duplicates=26)
 
