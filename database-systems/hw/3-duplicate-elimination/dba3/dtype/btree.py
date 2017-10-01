@@ -2,25 +2,44 @@ from .base import IndexBase
 from collections import OrderedDict, deque
 from .btree_node import BTreeNode
 
+
+class Directory:
+    def __init__(self, **kwargs):
+        self.storage = kwargs['storage']
+        self.n = kwargs['n']
+        self.max = kwargs['max_size']
+        self.active = None
+
+    def __getitem__(self, i):
+        node = BTreeNode(n=self.n, i=i, storage=self.storage, max_size=self.max)
+        return node
+    
+
+
 class BTree(IndexBase):
     def __init__(self, **kwargs):
-        self.nodes = []
+        self.nodes = Directory(**kwargs)
         self.count = 0
         self.root = 0
         self.length = 0
         self.n = kwargs['n']
-        root = BTreeNode(n=self.n, i=0)
-        self.nodes.append(root)
+        # root = BTreeNode(n=self.n, i=0)
+        # self.nodes.append(root)
 
     def add(self, record):
         self.length += 1
-        if self.nodes[self.root].full():
+        root = self.nodes[self.root]
+        if root.full():
             x = self.allocate()
 
             # Make new root
             y = self.root
             self.root = x
-            self.nodes[x].children.append(y)
+
+            nx = self.nodes[x]
+            nx.children.append(y)
+            nx.save()
+
             z = self.split(x, y)
             self.insert_non_full(x, record)
         else:
@@ -29,30 +48,40 @@ class BTree(IndexBase):
     def split(self, x, y):
         z = self.allocate()
 
-        mid, left, right = self.nodes[y].split()
-        self.nodes[y].set(left)
-        self.nodes[z].set(right)
+        ny = self.nodes[y]
+        mid, left, right = ny.split()
+        ny.set(left)
+        ny.save()
 
-        i = self.nodes[x].add(mid)
-        self.nodes[x].children.insert(i+1, z)
+        nz = self.nodes[z]
+        nz.set(right)
+        nz.save()
+
+        nx = self.nodes[x]
+        i = nx.add(mid)
+        nx.children.insert(i+1, z)
+        nx.save()
         return z
 
 
     def allocate(self):
         self.count += 1
-        right = BTreeNode(n=self.n, i=self.count)
-        self.nodes.append(right)
+        # right = BTreeNode(n=self.n, i=self.count)
+        # self.nodes.append(right)
         return self.count
         
 
     def insert_non_full(self, i, key):
-        if self.nodes[i].leaf():
-            self.nodes[i].add(key)
+        ni = self.nodes[i]
+        if ni.leaf():
+            ni.add(key)
+            ni.save()
         else:
             # Find child where key belongs
             # print("Path: ", self.nodes[i].keys)
-            j = self.nodes[i].child(key)
-            if self.nodes[j].full():
+            j = ni.child(key)
+            nj = self.nodes[j]
+            if nj.full():
                 k = self.split(i, j)
                 self.insert_non_full(i, key)
             else:
@@ -105,12 +134,13 @@ class BTree(IndexBase):
 
     def __contains__(self, record):
         i = self.root
-        while not self.nodes[i].leaf():
-            if record in self.nodes[i]:
+        node = self.nodes[i]
+        while not node.leaf():
+            if record in node:
                 return True
-            j = self.nodes[i].child(record)
-            i = j
-        return record in self.nodes[i]
+            j = node.child(record)
+            node = self.nodes[j]
+        return record in node
 
     def __len__(self):
         return self.length
@@ -121,7 +151,7 @@ if __name__ == '__main__':
     import sys
     random.seed(100)
     from pprint import pprint
-    tree = BTree(n=3)
+    tree = BTree(n=3, storage='data/btree', max_size=1000)
     xs = []
 
     ys = random.sample(range(1, 100), 50)

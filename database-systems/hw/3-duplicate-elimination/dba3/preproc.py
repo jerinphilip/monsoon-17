@@ -27,18 +27,22 @@ def generate(**kw):
         "count" : 100
     }
 
-    output = RecordBlock(name=kw['output_file'], size=kw['size'])
-    overflow = False
-    while not overflow:
+    output = open(kw['output_file'], "w+")
+    size = 0
+    tocsv = lambda ls: ','.join(map(str, ls))
+    while size < kw['size']:
         rows = sample(**params)
-        try:
-            for row in rows:
-                output.write(row)
-            duplicates = random.sample(rows, kw['duplicates'])
-            for row in duplicates:
-                output.write(row)
-        except BlockOverflowError:
-            overflow = True
+        for row in rows:
+            crow = tocsv(row)
+            size += len(crow)
+            output.write(crow + '\n')
+        duplicates = random.sample(rows, kw['duplicates'])
+        for row in duplicates:
+            crow = tocsv(row)
+            size += len(crow)
+            output.write(crow + '\n')
+            
+
 
         
 if __name__ == '__main__':

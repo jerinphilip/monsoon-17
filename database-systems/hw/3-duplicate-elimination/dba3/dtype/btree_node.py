@@ -1,3 +1,5 @@
+import os
+from dba3.block import RecordBlock
 
 class BTreeNode:
     def __init__(self, **kwargs):
@@ -5,9 +7,24 @@ class BTreeNode:
         self.keys = []
         self.children = []
         self.i = kwargs['i']
+        self.storage = kwargs['storage']
+        self.max_size = kwargs['max_size']
+        self.fname = os.path.join(self.storage, "node_%d.bt"%(self.i))
+        self.load()
 
-        if 'keys' in kwargs: self.keys = kwargs['keys']
-        if 'children' in kwargs: self.keys = kwargs['children']
+    def load(self):
+        block = RecordBlock(name=self.fname, size=self.max_size)
+        data = block.read()
+        if data:
+            self.children, *self.keys = data
+            self.children = list(self.children)
+
+    def save(self):
+        block = RecordBlock(name=self.fname, size=self.max_size)
+        block.overwrite()
+        block.write(self.children)
+        for key in self.keys:
+            block.write(key)
 
     def check_constraints(self):
         nkeys = len(self.keys)
@@ -71,3 +88,25 @@ class BTreeNode:
     def __contains__(self, record):
         return record in self.keys
 
+
+
+if __name__ == '__main__':
+    import random
+    import sys
+    random.seed(100)
+    from pprint import pprint
+    node = BTreeNode(n=3, storage='data/btree', i=0, max_size=1000)
+
+    """
+    xs = random.sample(range(1, 100), 50)
+    for x in xs:
+        y = (x, 23)
+        node.keys.append(y)
+
+    xs = random.sample(range(1, 100), 7)
+    for x in xs:
+        node.children.append(x)
+    """
+
+    print(node.keys, node.children)
+    node.save()

@@ -25,7 +25,6 @@ class Bucket:
         try:
             block = RecordBlock(name=self.active, size=self.max_size)
             block.write(record)
-            block.close()
         except BlockOverflowError:
             self.new()
             self.add(record)
@@ -34,7 +33,6 @@ class Bucket:
         for fn in self.files:
             block = RecordBlock(name=fn, size=self.max_size)
             data = block.read()
-            block.close()
             if record in data:
                 return True
         return False

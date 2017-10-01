@@ -18,32 +18,37 @@ class Block:
         self.name = kwargs['name']
         self.max = kwargs['size']
         self.output = ''
+        self.extra = ''
         if os.path.exists(self.name):
             self.fp = open(self.name, 'r+')
-            self.read()
+            self.output = self.fp.read()
         else:
             self.fp = open(self.name, 'w')
-            self.size = 0
 
     def write(self, output):
-        if len(self.output) + len(output) > self.max:
+        current = len(self.output) + len(self.extra)
+        if current + len(output) > self.max:
             self.flush()
             raise BlockOverflowError
-        self.size += len(output)
-        self.output += output
+        self.extra += output
 
     def flush(self):
-        self.
+        lines = self.output.splitlines()
+        self.fp.write(self.extra)
+
+    def overwrite(self):
+        self.fp = open(self.name, 'w+')
 
     def read(self):
         # Assuming a block, character IO
-        self.fp = open(self.name, 'r+')
-        data = self.fp.read()
-        self.size = len(data)
-        return data
+        return self.output
 
     def close(self):
         self.fp.close()
+
+    def __del__(self):
+        self.flush()
+        self.close()
 
 if __name__ == '__main__':
     block = Block(name='temp.txt', size=100)
