@@ -16,14 +16,13 @@ def generate(**kw):
             record = tuple(map(randentry, range(kw['columns'])))
             if record not in required:
                 required.add(record)
-                print(record)
                 count += 1
         return required
 
 
     params = {
-        "min": 100,
-        "max": 200,
+        "min": 0,
+        "max": 1000,
         "columns": 3,
         "count" : 100
     }
@@ -31,8 +30,6 @@ def generate(**kw):
     output = RecordBlock(name=kw['output_file'], size=kw['size'])
     overflow = False
     while not overflow:
-        params['min'] += 100
-        params['max'] += 100
         rows = sample(**params)
         try:
             for row in rows:

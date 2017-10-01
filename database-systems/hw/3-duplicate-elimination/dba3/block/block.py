@@ -17,6 +17,7 @@ class Block:
     def __init__(self, **kwargs):
         self.name = kwargs['name']
         self.max = kwargs['size']
+        self.output = ''
         if os.path.exists(self.name):
             self.fp = open(self.name, 'r+')
             self.read()
@@ -25,8 +26,14 @@ class Block:
             self.size = 0
 
     def write(self, output):
+        if len(self.output) + len(output) > self.max:
+            self.flush()
+            raise BlockOverflowError
         self.size += len(output)
-        self.fp.write(output)
+        self.output += output
+
+    def flush(self):
+        self.
 
     def read(self):
         # Assuming a block, character IO
