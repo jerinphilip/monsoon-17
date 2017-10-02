@@ -58,7 +58,9 @@ class EXP3MAB(MABLearner):
         
 
     def choose_arm(self):
-        i = np.argmax(self.weights)
+        #i = np.argmax(self.weights)
+        i = np.random.choice(range(self.narms))
+        i = 9
         self.choices.append(i)
         return i
 
