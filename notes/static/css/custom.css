@@ -1,0 +1,54 @@
+html, body {
+    font-size: 12pt;
+    font-family: "Open Sans", sans-serif;
+    color: #222;
+    margin-top: 2px;
+}
+
+header {
+    margin-top: 0.5rem;
+}
+
+header a{
+    color: #555;
+    text-decoration: none;
+    font-family: "Noto Sans", sans-serif;
+}
+
+header a:hover{
+    color: #333;
+    text-decoration: none;
+    font-family: "Noto Sans", sans-serif;
+    border-bottom: 2px solid #ef2929;
+}
+
+
+footer {
+    color: #555;
+    margin-top: 30px;
+    padding: 12px 0px 12px 0px;
+    text-align: right;
+}
+
+div.figure{
+    text-align: center; 
+}
+
+div.figure > img {
+    margin: 2px;
+    max-width: 100%;
+    max-height: 100%;
+    border: 5px solid white;
+    box-shadow: 0px 0px 0px 2px #888;
+}
+
+p.caption {
+    color: #888;
+}
+
+h1,h2,h3,h4,h5,h6{
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+

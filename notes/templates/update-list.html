@@ -1,0 +1,19 @@
+<div id="accordion" role="tablist" aria-multiselectable="true">
+    $for(updates)$
+    <div class="card">
+        <div class="card-header" role="tab" id="heading-$date-hash$">
+            <h5 class="m-0">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse-$date-hash$" aria-expanded="false" aria-controls="collapse-$date-hash$">
+                    $title$
+                </a> <small class="float-right">$date$</small>
+            </h5>
+        </div>
+
+        <div id="collapse-$date-hash$" class="collapse" role="tabpanel" aria-labelledby="heading-$date-hash$">
+            <div class="card-block">
+                $body$
+            </div>
+        </div>
+    </div>
+    $endfor$
+</div>
