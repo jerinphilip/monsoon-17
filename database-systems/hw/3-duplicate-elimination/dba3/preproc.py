@@ -27,7 +27,7 @@ def generate(**kw):
         "count" : 100
     }
 
-    output = open(kw['output_file'], "w+")
+    output = open(kw['output_file'], "w+", 1024*1024*10)
     size = 0
     tocsv = lambda ls: ','.join(map(str, ls))
     while size < kw['size']:
