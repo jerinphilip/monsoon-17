@@ -4,10 +4,10 @@ from dba3.dtype import BTree
 from argparse import ArgumentParser
 
 def opts(parser):
-    parser.add_argument('-ds', '--container', choices=['btree', 'hashmap'], required=True)
-    parser.add_argument('-c', '--count', required=True, type=int, default=1000)
-    parser.add_argument('-i', '--input', required=True)
-    parser.add_argument('-o', '--output', required=True)
+    parser.add_argument('-ds', '--container', choices=['btree', 'hashmap'], required=True, help="Container to use to find unique elements")
+    parser.add_argument('-c', '--count', required=True, type=int, default=1000, help="Iterator load per iteration")
+    parser.add_argument('-i', '--input', required=True, help="Input Record File")
+    parser.add_argument('-o', '--output', required=True, help="File to write unique entries to")
 
 if __name__ == '__main__':
     parser = ArgumentParser(description="Index structure, duplicate elimination")
