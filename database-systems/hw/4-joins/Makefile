@@ -3,6 +3,8 @@ CFLAGS=--std=c++14
 
 .PHONY: clean all
 
+all: sort_test join_test
+
 sort_test: test_sorter.cpp sort.hpp buffer.hpp
 	$(CC) $(CFLAGS) test_sorter.cpp -o test_sorter
 	./test_sorter input/R input/R.sorted

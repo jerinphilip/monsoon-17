@@ -9,10 +9,9 @@ enum {
 };
 
 struct join_struct {
-    bool used, done;
+    bool used, done, empty;
     std::vector<row> vr;
     row representative;
-    bool empty;
     int index;
 
     join_struct(int i){
@@ -52,22 +51,21 @@ struct SortJoin {
             // There's something in R, S now. Compare if reps are same.
             if ( r_state.key() == s_state.key() ){
                 // Cross product the two.
-                cross_product(r_state.vr, s_state.vr);
-                r_state.used = true;
-                s_state.used = true;
+                cross_product(r_state, s_state);
             }
 
             else {
                 // Pad with null?
+                std::cerr << "Pad? Quit? I don't know" << std::endl;
             }
             
         }
 
     }
 
-    void cross_product(std::vector<row> &vr, std::vector<row> &vs){
-        for(auto &r: vr){
-            for(auto &s: vs){
+    void cross_product(join_struct &jr, join_struct &js){
+        for(auto r: jr.vr){
+            for(auto s: js.vr){
                 row t;
                 t.insert(t.end(), r.begin(), r.end());
                 t.insert(t.end(), s.begin(), s.end());
@@ -75,8 +73,10 @@ struct SortJoin {
             }
 
         }
-        vr.clear();
-        vs.clear();
+        js.vr.clear();
+        jr.vr.clear();
+        js.used = true;
+        jr.used = true;
     }
 
     void get_same(read_buffer &rb, join_struct &js){
@@ -103,9 +103,12 @@ struct SortJoin {
                     }
                 }
                 else {
+                    done = true;
                     js.done = true;
                 }
             }
+
+            std::cerr << "Are we stuck in get same?" << std::endl;
         }
         js.used = false;
     }
