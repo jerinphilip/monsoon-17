@@ -63,13 +63,16 @@ struct read_buffer {
     int max_buffer_size;
     std::fstream fp;
     table t;
+    int processed;
 
     read_buffer(const char *filename, int max_buffer_size):
         max_buffer_size(max_buffer_size),
-        fp(filename, std::ios::in){
+        fp(filename, std::ios::in),
+        processed(0){
     }
 
     bool advance(row &r){
+        processed += 1;
         bool status = get(r);
         pop();
         return status;
@@ -120,13 +123,16 @@ struct write_buffer {
     std::fstream fp;
     std::stringstream out_buffer;
     int current_size;
+    int processed;
 
     write_buffer(const char *filename, int max_buffer_size):
         max_buffer_size(max_buffer_size),
-        fp(filename, std::ios::out), current_size(0){
+        fp(filename, std::ios::out), current_size(0),
+        processed(0){
     }
 
     bool write(row &r){
+        processed += 1;
         current_size += utils::print(out_buffer, r);
         if (current_size > max_buffer_size) {
             return flush();
@@ -153,6 +159,7 @@ struct write_buffer_hard: write_buffer {
         write_buffer(filename, max_buffer_size){}
 
     bool write (row & r){
+        processed += 1;
         current_size += utils::print(out_buffer, r);
         if ( current_size > max_buffer_size ){
             flush();

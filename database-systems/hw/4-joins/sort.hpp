@@ -38,25 +38,41 @@ struct sorter {
         int count = 0;
         write_buffer_hard *wbh = new_write_buffer(count);
         int current_size = 0;
+        int debug_count = 0;
+        int debug_advance = 0;
         while ( rb.advance(r) ){
+            debug_advance += 1;
             if(current_size + utils::row_ssize(r) <= buffer_size){
                 current_size += utils::row_ssize(r);
                 table.push_back(r);
             }
             else{
                 sort(table.begin(), table.end(), utils::comparator(index));
-                for(auto &r: table){
-                    wbh->write(r);
+                for(auto &r_: table){
+                    wbh->write(r_);
+                    debug_count += 1;
                 }
                 wbh->flush();
                 count = count + 1;
+                delete wbh;
                 wbh = new_write_buffer(count);
                 table.clear();
+                
+                // New values
                 table.push_back(r);
                 current_size = utils::row_ssize(r);
             }
         }
-        std::cerr << "Stuck?" << std::endl;
+
+        /* Cleanup write */
+        sort(table.begin(), table.end(), utils::comparator(index));
+        for(auto &r_: table){
+            wbh->write(r_);
+            debug_count += 1;
+        }
+        wbh->flush();
+        count = count + 1;
+        delete wbh;
         wbh->flush();
     }
 
