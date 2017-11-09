@@ -73,7 +73,7 @@ struct sorter {
         typedef std::pair<row, int> node;
         auto compare = [](int index_){
             auto inner_ = [index_](const node a, const node b){
-                return a.first[index_] < b.first[index_];
+                return a.first[index_] > b.first[index_];
             };
             return inner_;
         };
@@ -84,7 +84,6 @@ struct sorter {
             row r;
             if (rbs[i]->advance(r)) {
                 auto qnode = make_pair(r, i);
-                utils::print(std::cerr, r);
                 Q.push(qnode);
             }
         }
