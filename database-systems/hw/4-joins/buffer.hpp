@@ -26,6 +26,37 @@ namespace utils {
         out << "\n"; size += 1;
         return size;
     }
+
+    auto comparator = [](int index){
+        auto comp_ = [&index](const row &r, const row &s){
+            return r[index] < s[index];
+        };
+        return comp_;
+    };
+
+    int row_size(row &r){
+        int size_ = 0;
+        for (auto &c: r){
+            size_ += c.size();
+        }
+        return size_;
+    }
+
+    int row_ssize(row &r){
+        int size = 0;
+        bool first = true;
+        for(auto &c: r){
+            if (not first){
+                size += 1;
+            }
+
+            first = false;
+            size += c.size();
+        }
+        size += 1;
+        return size;
+    }
+
 }
 
 struct read_buffer {
@@ -35,7 +66,7 @@ struct read_buffer {
 
     read_buffer(const char *filename, int max_buffer_size):
         max_buffer_size(max_buffer_size),
-        fp(filename, std::ios::in) {
+        fp(filename, std::ios::in){
     }
 
     bool advance(row &r){
@@ -51,11 +82,12 @@ struct read_buffer {
             }
         } 
         r = t.front();
-        return false;
+        return true;
     }
 
     void pop(){
-        t.pop();
+        if (not t.empty())
+            t.pop();
     }
 
     bool buffer_in(){
@@ -117,16 +149,17 @@ struct write_buffer {
 };
 
 struct write_buffer_hard: write_buffer {
+    write_buffer_hard(const char *filename, int max_buffer_size):
+        write_buffer(filename, max_buffer_size){}
+
     bool write (row & r){
         current_size += utils::print(out_buffer, r);
         if ( current_size > max_buffer_size ){
             flush();
             return false;
         }
+        return true;
     }
 };
-
-
-
 
 #endif
