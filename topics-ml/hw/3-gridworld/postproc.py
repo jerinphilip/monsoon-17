@@ -10,8 +10,12 @@ with open(args.file) as fp:
     reader = csv.reader(fp)
     data = list(reader)
     eps, ts, rs, srs, mrs, steps = list(zip(*data))
-    print(len(ts), len(rs))
-    plt.plot(ts, mrs)
-    #plt.show()
+    ts = list(map(int, ts))
+    mrs = list(map(float, mrs))
+    steps = list(map(int, steps))
+    plt.plot(ts, mrs, label="mean rewards")
+    plt.plot(ts, steps, label="steps")
+    plt.legend()
+    plt.show()
 
 
