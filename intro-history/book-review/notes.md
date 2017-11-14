@@ -117,8 +117,82 @@ it never ceases to excite. The
 historical discourse is the world's
 oldest thriller)" (p. 55)
 
+[Take taxonomy figure from here]
+
 
 # V
 
+"The integrative operation is carried
+out in its discourse by the other class
+of basic narrative units, that is,
+indices. A necessary and indispensable
+cor- relate of functions they are
+distinguished from the latter in some
+important respects" (p. 56)
+
+"As a result a discourse could be either
+predominantly metonymic or metaphorical
+depending on whether a significantly
+larger number of its components are
+syntagmatically ratified or
+paradigmatically" (p. 57)
+
+"Working intimately together with the
+latter they make the despatch into more
+than a mere register of happenings and
+help to inscribe into it a meaning, an
+interpretation so that the protagonists
+emerge from it not as peasants but as
+'Insurgents', not as Musalman but as
+1anatic'; their action not as resistance
+to the tyranny of the rural elite but as
+'the most daring and 'Wanton atrocities
+on the inhabitants'; their project not
+as a revolt against zamindari but as
+'defying the authority of the State',
+not as a search for an alternative order
+in which the peace of the countryside
+would not be violated by the officially
+condoned anarchy of semi-feudal
+landlordism but as, 'disturbing file
+public tranquility"
+
+Generalizing from a bunch, using
+language to convenience and all that.
+
+[table in 59]
 
 
+"Hence these documents make no sense
+except in terms of a code of
+pacification which, under the Raj, was a
+complex of coercive intervention by the
+State and its proteges, the native
+elite, with arms and words.
+Representatives of the primary type of
+discourse in the historiography of
+peasant revolts, these are specimens of
+the prose of counter-insurgency"
+
+
+
+# VI
+
+Mark Thornhill, secondary source
+asserting the reports to be history.
+
+Drawing from discrete locations in time
+and creating taxonomys, breaking up the
+sequential events - dechronologising it.
+
+Anxieties of the local custodian of law
+and order are embodied in the sources.
+
+
+How numbers don't show clear statistic.
+12 British Officers > 20 * 12 Chuars.
+
+
+# VII
+
+How tertiary 

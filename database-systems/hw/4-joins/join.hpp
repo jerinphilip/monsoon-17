@@ -56,7 +56,7 @@ struct SortJoin {
 
             else {
                 // Pad with null?
-                std::cerr << "Pad? Quit? I don't know" << std::endl;
+                //std::cerr << "Pad? Quit? I don't know" << std::endl;
             }
             
         }
@@ -108,7 +108,7 @@ struct SortJoin {
                 }
             }
 
-            std::cerr << "Are we stuck in get same?" << std::endl;
+            //std::cerr << "Are we stuck in get same?" << std::endl;
         }
         js.used = false;
     }

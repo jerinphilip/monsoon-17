@@ -3,26 +3,56 @@ from qlearn import QLearn
 from expected_sarsa import ExpectedSARSA
 from gridworld import GridWorld
 from agent import Agent
+from argparse import ArgumentParser
+import os
 
-grid = GridWorld();
-agent = Agent()
-algo = QLearn()
-algo = SARSA()
-algo = ExpectedSARSA()
+def algo_args(parser):
+    parser.add_argument('--algo', choices=['qlearn', 'sarsa', 'esarsa'], default='qlearn')
 
-s = agent.position()
-a = (0, 1)
 
-while s != grid.goal:
-    def step(s, a):
-        maybe_a = algo.choose(s)
-        a_ = agent.move(maybe_a)
-        s_ = grid.move(s, a_)
-        agent.position(s_)
-        r = agent.reward(grid)
-        print(s, a, r, s_, a_)
-        algo.update(s, a, r, s_, a_)
-        return (s_, a_)
-    s, a = step(s, a)
-step(s, a)
+
+parser = ArgumentParser()
+algo_args(parser)
+args = parser.parse_args()
+
+for eps in [0.05, 0.2]:
+    fname = '{}-{}.csv'.format(args.algo, eps)
+    fpath = os.path.join("exps", fname)
+    with open(fpath, "w+") as fp:
+        total_rewards = 0
+        for episode in range(10000):
+            options = {
+                    "qlearn": lambda: QLearn(eps=eps),
+                    "sarsa": lambda: SARSA(eps=eps),
+                    "esarsa": lambda: ExpectedSARSA(eps=eps)
+            }      
+            grid = GridWorld();
+            agent = Agent()
+            algo = options.get(args.algo)()
+            s = agent.position()
+            a = (0, 1)
+
+            episode_reward = 0
+
+            def step(s, a):
+                r = agent.reward(grid)
+                a_ = agent.move(a)
+                s_ = grid.move(s, a_)
+                agent.position(s_)
+                maybe_a = algo.choose(s_)
+                algo.update(s, a, r, s_, maybe_a)
+                return (s_, a_, r)
+
+            while s != grid.goal:
+                #print((s, a), "->", end='')
+                s, a, r = step(s, a)
+                episode_reward += r
+                #print((s, a), "Reward:", r)
+            #print((s, a), "->", end='')
+            s, a, r = step(s, a)
+            episode_reward += r
+            #print((s, a), "Reward:", r)
+            total_rewards += episode_reward
+            values = [eps, episode, episode_reward, total_rewards, total_rewards/(episode+1)]
+            print(','.join(map(str, values)), file=fp)
 

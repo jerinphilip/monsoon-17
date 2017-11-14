@@ -6,7 +6,8 @@ def ExpectedSARSA(**kwargs):
     _sarsa = lambda t: t
     defaults = {
         "gamma": 0.99,
-        "alpha": 0.01
+        "alpha": 0.01,
+        "eps": 0.05
     }
 
     N = defaultdict(int)
@@ -30,7 +31,7 @@ def ExpectedSARSA(**kwargs):
         return epsgreedy(
                 best=best_action,
                 others=list(set(actions) - set([best_action])),
-                eps=0.05)
+                eps=defaults["eps"])
 
     setattr(_sarsa, 'update', update)
     setattr(_sarsa, 'choose', choose)

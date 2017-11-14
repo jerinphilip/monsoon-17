@@ -26,7 +26,8 @@ def Agent(**kwargs):
     def reward(env):
         _reward = {
             env.goal: 100,
-            env.bad: -70
+            env.bad: -70,
+            env.start: 0
         }
         return _reward.get(_params["position"], -1)
 

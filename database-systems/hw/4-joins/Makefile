@@ -14,6 +14,10 @@ join_test: sort_test join.hpp
 	$(CC) $(CFLAGS) test_join.cpp -o test_join
 	./test_join input/R input/S
 
+new_test_cases: sort_test join.hpp
+	./test_join testcases/input1/R testcases/input1/S
+	./test_join testcases/input2/R testcases/input2/S.txt
+
 
 clean:
 	rm -rf intermediates/*
