@@ -16,7 +16,7 @@ def data(csvfile):
 
 algos = [
             'qlearn', 
-            #'esarsa', 
+            'esarsa', 
             'sarsa'
         ]
 eps = ['0.05', '0.2']
