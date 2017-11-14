@@ -29,6 +29,16 @@ def ExpectedSARSA(**kwargs):
             pi[s] = a
         return pi
 
+    def value():
+        ls = list(range(4))
+        states = product(ls, ls)
+        V = dict()
+        pi = policy()
+        for s in states:
+            V[s] = Q[(s, pi[s])]
+        return V
+
+
     def update(*args):
         s, a, r, s_, a_ = args
         # _a = defaults["alpha"]
@@ -61,6 +71,7 @@ def ExpectedSARSA(**kwargs):
     setattr(_sarsa, 'update', update)
     setattr(_sarsa, 'choose', choose)
     setattr(_sarsa, 'policy', policy)
+    setattr(_sarsa, 'value', value)
     return _sarsa
 
 if __name__ == '__main__':

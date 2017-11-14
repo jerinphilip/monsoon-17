@@ -48,6 +48,8 @@ symbol = {
 
 for pair in files:
     pfpath = lambda x: 'exps/' + fname(x) + '.policy'
+    vfpath = lambda x: 'exps/' + fname(x) + '.value'
+
     with open(pfpath(pair), "rb") as fp:
         pi = pickle.load(fp)
         print(fname(pair))
@@ -58,3 +60,11 @@ for pair in files:
                 print(symbol[a], end='')
             print()
 
+    with open(vfpath(pair), "rb") as fp:
+        V = pickle.load(fp)
+        print(fname(pair))
+        for i in range(4):
+            for j in range(4):
+                s = (i, j)
+                print(V[s], end='\t')
+            print()

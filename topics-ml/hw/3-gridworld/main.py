@@ -66,3 +66,7 @@ for eps in [0.05, 0.2]:
     with open(pfpath, "wb+") as ofp:
         pickle.dump(algo.policy(), ofp)
 
+    value_fname = '{}-{}.value'.format(args.algo, eps)
+    vfpath = os.path.join("exps", value_fname)
+    with open(vfpath, "wb+") as ofp:
+        pickle.dump(algo.value(), ofp)
