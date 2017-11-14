@@ -63,8 +63,10 @@ for pair in files:
     with open(vfpath(pair), "rb") as fp:
         V = pickle.load(fp)
         print(fname(pair))
+        print('|', '|', '|'.join(map(lambda x: '%d'%(x), range(1, 5))), '|')
         for i in range(4):
+            vs = []
             for j in range(4):
                 s = (i, j)
-                print(V[s], end='\t')
-            print()
+                vs.append(V[s])
+            print('|', i+1, '|', '|'.join(map(lambda x: '%.2f'%(x), vs)), '|')
