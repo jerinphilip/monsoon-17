@@ -13,6 +13,16 @@ def SARSA(**kwargs):
     Q = defaultdict(random.random)
     defaults.update(kwargs)
 
+    def policy():
+        ls = list(range(4))
+        states = product(ls, ls)
+        pi = dict()
+        for s in states:
+            q_value = lambda a: Q[(s, a)]
+            a = max(actions, key=q_value)
+            pi[s] = a
+        return pi
+
     def update(s, a, r, s_, a_):
         # _a = defaults["alpha"]
         _g = defaults["gamma"]

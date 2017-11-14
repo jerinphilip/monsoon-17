@@ -37,12 +37,12 @@ for eps in [0.05, 0.2]:
             episode_reward = 0
 
             def step(s, a):
-                r = agent.reward(grid)
-                a_ = agent.move(a)
-                s_ = grid.move(s, a_)
+                s_ = grid.move(s, a)
                 agent.position(s_)
                 maybe_a = algo.choose(s_)
-                algo.update(s, a, r, s_, maybe_a)
+                a_ = agent.move(maybe_a)
+                r = agent.reward(grid)
+                algo.update(s, a, r, s_, a_)
                 return (s_, a_, r)
 
             steps = 0
@@ -53,9 +53,10 @@ for eps in [0.05, 0.2]:
                 steps += 1
                 #print((s, a), "Reward:", r)
             #print((s, a), "->", end='')
-            s, a, r = step(s, a)
-            episode_reward += r
+            # s, a, r = step(s, a)
+            # episode_reward += r
             #print((s, a), "Reward:", r)
+
             total_rewards += episode_reward
             values = [eps, episode, episode_reward, total_rewards, total_rewards/(episode+1), steps]
             print(','.join(map(str, values)), file=fp)
