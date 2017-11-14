@@ -1,6 +1,7 @@
 from collections import defaultdict
 import random
 from utils import epsgreedy
+from itertools import product
 
 def SARSA(**kwargs):
     _sarsa = lambda t: t
@@ -12,6 +13,7 @@ def SARSA(**kwargs):
     N = defaultdict(int)
     Q = defaultdict(random.random)
     defaults.update(kwargs)
+    actions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
     def policy():
         ls = list(range(4))
@@ -31,7 +33,6 @@ def SARSA(**kwargs):
         Q[(s, a)] = Q[(s, a)] + _a*(r + _g*Q[(s_, a_)] - Q[(s, a)])
 
     def choose(s_):
-        actions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         q_value = lambda a: Q[(s_, a)]
         best_action = max(actions, key=q_value)
         # TODO implement epsilon delta here.
@@ -42,6 +43,7 @@ def SARSA(**kwargs):
 
     setattr(_sarsa, 'update', update)
     setattr(_sarsa, 'choose', choose)
+    setattr(_sarsa, 'policy', policy)
     return _sarsa
 
 if __name__ == '__main__':

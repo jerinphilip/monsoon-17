@@ -6,6 +6,7 @@ from agent import Agent
 from argparse import ArgumentParser
 import os
 import random
+import pickle
 
 def algo_args(parser):
     parser.add_argument('--algo', choices=['qlearn', 'sarsa', 'esarsa'], default='qlearn')
@@ -60,4 +61,8 @@ for eps in [0.05, 0.2]:
             total_rewards += episode_reward
             values = [eps, episode, episode_reward, total_rewards, total_rewards/(episode+1), steps]
             print(','.join(map(str, values)), file=fp)
+    policy_fname = '{}-{}.policy'.format(args.algo, eps)
+    pfpath = os.path.join("exps", policy_fname)
+    with open(pfpath, "wb+") as ofp:
+        pickle.dump(algo.policy(), ofp)
 

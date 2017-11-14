@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 import csv
 from matplotlib import pyplot as plt
 from itertools import product
+import pickle
 
 def data(csvfile):
     with open(csvfile) as fp:
@@ -30,3 +31,30 @@ for pair in files:
 
 plt.legend()
 plt.show()
+
+for pair in files:
+    ts, mrs, steps = data(fpath(pair))
+    plt.plot(ts, steps, label="{}".format(fname(pair)))
+
+plt.legend()
+plt.show()
+
+symbol = {
+    (0, 1): '>',
+    (0, -1): '<',
+    (1, 0): 'v',
+    (-1, 0): '^'
+}
+
+for pair in files:
+    pfpath = lambda x: 'exps/' + fname(x) + '.policy'
+    with open(pfpath(pair), "rb") as fp:
+        pi = pickle.load(fp)
+        print(fname(pair))
+        for i in range(4):
+            for j in range(4):
+                s = (i, j)
+                a = pi[s]
+                print(symbol[a], end='')
+            print()
+

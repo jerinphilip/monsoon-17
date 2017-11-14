@@ -49,6 +49,7 @@ def QLearn(**kwargs):
 
     setattr(_sarsa, 'update', update)
     setattr(_sarsa, 'choose', choose)
+    setattr(_sarsa, 'policy', policy)
     return _sarsa
 
 if __name__ == '__main__':
