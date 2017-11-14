@@ -24,6 +24,7 @@ def QLearn(**kwargs):
         actions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         q_value = lambda a: Q[(s_, a)]
         best_action = max(actions, key=q_value)
+        print(s_, "(best)", best_action)
         # TODO implement epsilon delta here.
         return epsgreedy(
                 best=best_action,

@@ -6,7 +6,6 @@ def SARSA(**kwargs):
     _sarsa = lambda t: t
     defaults = {
         "gamma": 0.99,
-        "alpha": 0.01,
         "eps": 0.05
     }
 
