@@ -1,21 +1,32 @@
 from argparse import ArgumentParser
 import csv
 from matplotlib import pyplot as plt
+from itertools import product
 
-parser = ArgumentParser()
-parser.add_argument('-f', '--file', required=True)
-args = parser.parse_args()
+def data(csvfile):
+    with open(csvfile) as fp:
+        reader = csv.reader(fp)
+        data = list(reader)
+        eps, ts, rs, srs, mrs, steps = list(zip(*data))
+        ts = list(map(int, ts))
+        mrs = list(map(float, mrs))
+        steps = list(map(int, steps))
+        return (ts, mrs, steps)
 
-with open(args.file) as fp:
-    reader = csv.reader(fp)
-    data = list(reader)
-    eps, ts, rs, srs, mrs, steps = list(zip(*data))
-    ts = list(map(int, ts))
-    mrs = list(map(float, mrs))
-    steps = list(map(int, steps))
-    plt.plot(ts, mrs, label="mean rewards")
-    plt.plot(ts, steps, label="steps")
-    plt.legend()
-    plt.show()
+algos = [
+            'qlearn', 
+            #'esarsa', 
+            'sarsa'
+        ]
+eps = ['0.05', '0.2']
 
+fname = lambda x: '-'.join(x)
+fpath = lambda x: 'exps/' + fname(x) + '.csv'
 
+files = list(product(algos, eps))
+for pair in files:
+    ts, mrs, steps = data(fpath(pair))
+    plt.plot(ts, mrs, label="{}".format(fname(pair)))
+
+plt.legend()
+plt.show()
